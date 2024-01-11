@@ -9,6 +9,7 @@ from prettytable import PrettyTable
 
 db_path = 'data/'
 
+
 def welcome():
     """
     欢迎界面/字符画
@@ -29,6 +30,7 @@ def welcome():
 
           ##############################################
           """)
+
 
 # 在table_infomation中创建数据库对应的表
 def create_tb_in_tbinfo(dbname):
@@ -502,7 +504,7 @@ def delete_record(table_name, current_database, current_dbname, condition_list):
             delete_rows_list = []
             j += 1
 
-        #print("delete_row_list为:"+str(delete_rows))
+        # print("delete_row_list为:"+str(delete_rows))
 
         # delete_rows没有元素
         if len(delete_rows) == 0:
@@ -523,9 +525,9 @@ def delete_record(table_name, current_database, current_dbname, condition_list):
                         flag = True
                 if flag:
                     deletePos.append(delete_rows[0][j])
-        
+
         deleteIndex = []
-        #找到delete_rows[0]中的元素index
+        # 找到delete_rows[0]中的元素index
         for i in range(len(deletePos)):
             deleteIndex.append(delete_rows[0].index(deletePos[i]))
         delTime = 0
@@ -533,7 +535,7 @@ def delete_record(table_name, current_database, current_dbname, condition_list):
             delete_rows[0].pop(deleteIndex[i] - delTime)
             delTime += 1
 
-        #print("删除的行号为:"+str(delete_rows[0]))
+        # print("删除的行号为:"+str(delete_rows[0]))
         # 按照delete_rows[0]删除行
         for i in range(len(delete_rows[0])):
             table.delete_rows(delete_rows[0][i] - i)
@@ -775,7 +777,7 @@ def set_permission(user, database, action):
     else:
         table.cell(row=row, column=col).value = table.cell(row=row, column=col).value + ',' + user
         db.save("data/system.xlsx")
-        print("成功给予用户" + user + ':' + action +"权限")
+        print("成功给予用户" + user + ':' + action + "权限")
 
 
 # revoke select on test_tb for testuser
@@ -793,7 +795,7 @@ def del_permission(user, database, action):
         else:
             table.cell(row=row, column=col).value = table.cell(row=row, column=col).value.replace(',' + user, '')
         db.save("data/system.xlsx")
-        print("成功收回用户" + user + ':' + action +"权限")
+        print("成功收回用户" + user + ':' + action + "权限")
     else:
         print("用户没有该权限")
 
@@ -823,8 +825,7 @@ def check_syntax(sql):
                 return True
 
 
-def signup(username,password):
-    
+def signup(username, password):
     db = load_workbook("data/system.xlsx")
     table = db['user']
     row = table.max_row + 1
@@ -930,35 +931,36 @@ def iter_cols(ws):  # 表格按行数组形式输出，eg:list(iter_rows(a))
     for row in ws.iter_cols():
         yield [cell.value for cell in row]
 
-#创建视图
-def create_view(view_name,sql,using_db):
+
+# 创建视图
+def create_view(view_name, sql, using_db):
     if sql[1] == 'from':
         table_name = sql[2]
-        #若using_db的sheet中存在表
+        # 若using_db的sheet中存在表
         if table_name in using_db:
             table = using_db[table_name]
-            #若sql[0] == '*'
+            # 若sql[0] == '*'
             if sql[0] == '*':
-                #创建新的文件'data/'+'view_'view_name+'.xlsx'
+                # 创建新的文件'data/'+'view_'view_name+'.xlsx'
                 wb = Workbook()
                 ws = wb.active
                 ws.title = view_name
-                #将table复制到新的文件中
+                # 将table复制到新的文件中
                 for row in iter_rows(table):
                     ws.append(row)
-                wb.save('data/'+'view_'+view_name+'.xlsx')
+                wb.save('data/' + 'view_' + view_name + '.xlsx')
                 print("成功创建视图")
             else:
-                #选择sql[0]中的列
+                # 选择sql[0]中的列
                 cols = sql[0].split(',')
-                #创建新的文件'data/'+'view_'view_name+'.xlsx'
+                # 创建新的文件'data/'+'view_'view_name+'.xlsx'
                 wb = Workbook()
                 ws = wb.active
                 ws.title = view_name
-                #将table中对应cols的列复制到新的文件中
+                # 将table中对应cols的列复制到新的文件中
                 for row in iter_rows(table):
                     ws.append([row[cols.index(col)] for col in cols])
-                wb.save('data/'+'view_'+view_name+'.xlsx')
+                wb.save('data/' + 'view_' + view_name + '.xlsx')
                 print("成功创建视图")
         else:
             print("该表不存在")

@@ -11,9 +11,6 @@ using_dbname = ''
 using_db = Workbook()
 
 
-
-
-
 def help():
     """
     打印帮助信息
@@ -213,14 +210,14 @@ def query(sql, tag=''):
                 using_db = load_workbook(db_path + using_dbname + '.xlsx')
             except:
                 print("[!]Error")
-        #创建视图
+        # 创建视图
         elif sql_word[1] == 'view':
-            #若sql_word[2]存在
+            # 若sql_word[2]存在
             if sql_word[2]:
                 viewname = sql_word[2]
                 if sql_word[3] == 'as' and sql_word[4] == 'select':
                     sql = sql_word[5:]
-                    dbms_function.create_view(viewname, sql,using_db)
+                    dbms_function.create_view(viewname, sql, using_db)
                 else:
                     print("[!]Syntax Error.\neg:>create view viewname as select * from table")
             else:
@@ -240,7 +237,7 @@ def query(sql, tag=''):
         if sql_word[1] == 'table':
             try:
                 dbms_function.drop_table(sql_word[2], using_dbname, using_db)
-                #若数据库还存在
+                # 若数据库还存在
                 if os.path.exists(db_path + using_dbname + '.xlsx'):
                     using_db = load_workbook(db_path + using_dbname + '.xlsx')
             except:
@@ -251,7 +248,8 @@ def query(sql, tag=''):
         if sql_word[2] == 'add':
             columns_list = re.findall('\((.*)\)', sql)[0].split(',')
             try:
-                dbms_function.add_field(tbname=sql_word[1], columns_list=columns_list, using_dbname=using_dbname,using_db=using_db)
+                dbms_function.add_field(tbname=sql_word[1], columns_list=columns_list, using_dbname=using_dbname,
+                                        using_db=using_db)
                 using_db = load_workbook(db_path + using_dbname + '.xlsx')
             except:
                 print("[!]Error")
@@ -259,7 +257,8 @@ def query(sql, tag=''):
         elif sql_word[2] == 'drop':
             columns_list = re.findall('\((.*)\)', sql)[0].split(',')
             try:
-                dbms_function.drop_field(tbname=sql_word[1], columns_list=columns_list, using_dbname=using_dbname,using_db=using_db)
+                dbms_function.drop_field(tbname=sql_word[1], columns_list=columns_list, using_dbname=using_dbname,
+                                         using_db=using_db)
                 using_db = load_workbook(db_path + using_dbname + '.xlsx')
             except:
                 print("[!]Error")
@@ -267,7 +266,8 @@ def query(sql, tag=''):
         elif sql_word[2] == 'modify':
             columns_list = re.findall('\((.*)\)', sql)[0].split(',')
             try:
-                dbms_function.modify_field(tbname=sql_word[1], alterFieldName=sql_word[3], columns_list=columns_list,using_dbname=using_dbname, using_db=using_db)
+                dbms_function.modify_field(tbname=sql_word[1], alterFieldName=sql_word[3], columns_list=columns_list,
+                                           using_dbname=using_dbname, using_db=using_db)
                 using_db = load_workbook(db_path + using_dbname + '.xlsx')
             except:
                 print("[!]Error")
@@ -382,12 +382,12 @@ def query(sql, tag=''):
         # 调用函数update
         dbms_function.update_record(table_name, using_db, using_dbname, cols, condition_list, multiFlag)
 
-    #注册用户
+    # 注册用户
     elif operate == 'signup':
         if user != 'admin':
             print("[!]You are not admin.")
             return False
-        #若sql_word[1]不存在
+        # 若sql_word[1]不存在
         try:
             dbms_function.signup(sql_word[1], sql_word[2])
         except:
@@ -416,14 +416,14 @@ def query(sql, tag=''):
             for index in indexs:
                 if '.DS' not in index:
                     print("[*] " + index[:-5])
-    
+
     # 读取脚本
     elif operate == 'load':
-        #弹出窗口按行读取txt
+        # 弹出窗口按行读取txt
         file_name = sql_word[1]
         file_path = 'data/script/' + file_name + '.txt'
         if os.path.exists(file_path):
-            #按行读取txt文件
+            # 按行读取txt文件
             f = os.open(file_path, os.O_RDONLY)
             lines = os.read(f, os.path.getsize(file_path)).decode('utf-8').split('\n')
             for line in lines:
@@ -468,11 +468,9 @@ def interpreter(command):
         help()
     else:
         query(command)
-    #将command写入log.txt
+    # 将command写入log.txt
     f = os.open('data/log.txt', os.O_RDWR | os.O_APPEND)
-    #写入时间+command
+    # 写入时间+command
     byte_str = ((time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())) + ' ' + command + '\n').encode('utf-8')
     os.write(f, byte_str)
     os.close(f)
-
-

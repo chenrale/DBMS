@@ -139,7 +139,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "Mini DBMS by group 10"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "DBMS 第二组"))
         self.groupBox_3.setTitle(_translate("MainWindow", "数据库"))
         self.groupBox_4.setTitle(_translate("MainWindow", "显示区"))
         self.groupBox.setTitle(_translate("MainWindow", "功能区"))
