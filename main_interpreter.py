@@ -273,52 +273,12 @@ def query(sql, tag=''):
                 print("[!]Error")
     # 选择操作select
     elif operate == 'select':
-        pos = 0
-        for i in range(len(sql_word)):
-            if '(' in sql_word[i] and 'select' in sql_word[i]:
-                pos = i
-        if pos == 3:
-            sql2 = sql_word[3][1:-1]
-            query(sql2, tag='nesting')
-            sql_word[3] = 'tmp'
-            sql = ' '.join(sql_word)
+        try:
+            col_names, table_names, where_clause = re.match(r"select\s+(.*?)\s+from\s+([\w\s,]+?)(?:\s+where\s+(.+))?$", sql).groups()
+        except:
+            return print("[!]Syntax Error.")
+        dbms_function.select(col_names, table_names, where_clause, using_db)
 
-        columns = sql_word[1]
-        table_name = sql_word[3]
-        if len(sql_word) > 4:
-            # try:
-            limit = sql_word[5].split()
-            predicate = 'and'
-            symbol = '='
-            if ',' in sql_word[5]:
-                limit = sql_word[5].split(',')
-                predicate = 'and'
-            elif '|' in sql_word[5]:
-                limit = sql_word[5].split('|')
-                predicate = 'or'
-            elif '>' in sql_word[5]:
-                # limit = sql_word[5].split()
-                symbol = '>'
-            elif '<' in sql_word[5]:
-                # limit = sql_word[5].split()
-                symbol = '<'
-            elif len(sql_word) > 6:
-                if sql_word[6] == 'in':
-                    limit = [sql_word[5] + '=' + sql_word[7]]
-                    predicate = 'in'
-                if sql_word[6] == 'like':
-                    limit = [sql_word[5] + '=' + sql_word[7]]
-                    predicate = 'like'
-            # except:
-            # limit = [].append(sql_word[5])
-            # print limit
-            for i in range(len(limit)):
-                limit[i] = limit[i].split(symbol)
-            limit = dict(limit)
-            return dbms_function.select(columns, table_name, using_dbname, using_db, limit, predicate=predicate,
-                                        symbol=symbol, tag=tag)
-        else:  # 没where的情况
-            return dbms_function.select(columns, table_name, using_dbname, using_db, tag=tag)
     # 授予权限
     elif operate == 'grant':
         if user != 'admin':

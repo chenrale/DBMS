@@ -1,8 +1,9 @@
-from collections import UserList
 import hashlib
 import os
 import re
-from numpy import save
+from typing import Literal
+import pandas as pd
+from functools import reduce
 
 from openpyxl import *
 from prettytable import PrettyTable
@@ -655,98 +656,86 @@ def update_record(table_name, current_database, current_dbname, cols, condition_
             else:
                 print("该表不在数据库中.")
 
+def cartesian_product(*dfs: pd.DataFrame) -> pd.DataFrame:
+    return reduce(lambda left,right: pd.merge(left,right,how='outer',on='_'), map(lambda df: df.assign(_=1), dfs)).drop('_', axis=1)
+def select(col_names: str, 
+           table_names: str, 
+           constrains: str | None,
+           using_db: Workbook) -> pd.DataFrame:
+    '''
+    Selects the `columns` from the table specified by `table_names` in the database specified by `using_dbname`.
+    
+    Parameters
+    ----------    
+    col_names : str
+        The columns to select from the table, separated by commas, or '*' for all columns.
+    table_names : str
+        The name of the table to select from. Can be a single table name or a list of table names separated by commas.
+    constrains : str
+        The constrains to apply to the selection.
+        eg: 'v2=2' means the value of the column v2 must be 2.
+    using_db : openpyxl.Workbook
+        The database to select from.
+    '''
+    db = {}
+    for sheet in using_db.worksheets:
+        db[sheet.title] = list(sheet.iter_rows(values_only=True))
+        db[sheet.title] = pd.DataFrame(db[sheet.title][1:], columns=db[sheet.title][0])
 
-# select a,b from table where c=x,d=x
-def select(columns, table_name, using_dbname, using_db, limit={}, predicate='and', symbol='=',
-           tag=''):  # {'c':'x','d':'x'}
-    if using_dbname == '':
-        print("please choose databse!")
-        return
-    # 查找表是否在数据库中
-    if table_name in using_db.sheetnames:
-        table = using_db[table_name]
-        # print columns
-        if columns == '*' and len(limit) == 0:
-            columns_name = list(iter_rows(table))[0]
-            table_print = PrettyTable(columns_name)
-            for i in range(1, len(list(iter_rows(table)))):
-                table_print.add_row(list(iter_rows(table))[i])
-            table_print.reversesort = True
-            if tag == 'view':
-                print(table_print)
-                return list(iter_rows(table))  # view
-            if tag == 'insert':
-                return list(iter_rows(table))
-            else:
-                print(table_print)
-        else:
-            sel_cols = columns.split(',')  # *的情况
-            rows_list = list(iter_rows(table))  # 所有的行
-            cols = rows_list[0]
-            col_pos = []
-            limit_pos = []
-            print_row = []
-            limit_cols = list(limit)
-            symbol = '==' if symbol == '=' else symbol
-            if columns[0] != '*':
-                for i in range(len(sel_cols)):
-                    col_pos.append(cols.index(sel_cols[i]))  # 要查的列的列号
-            else:
-                sel_cols = list(iter_rows(table))[0]
-                col_pos = range(len(cols))
-            for i in range(len(limit)):
-                limit_pos.append(cols.index(limit_cols[i]))  # where的列
-            for i in range(1, len(rows_list)):
-                match = 0
-                if predicate == 'in':
-                    match_list = limit[limit_cols[0]]
-                    for j in len(match_list):
-                        if rows_list[i][limit_pos[0]] == match_list[j]:
-                            print_row.append(i)
-                if predicate == 'like':
-                    like_word = re.findall('(.*)\%', limit[limit_cols[0]])
-                    if like_word in rows_list[i][limit_pos[0]]:
-                        print_row.append(i)
-                else:
-                    for j in range(len(limit_pos)):  # 通过eval实现比较运算
-                        if eval("'" + rows_list[i][limit_pos[j]] + "'" + symbol + "'" + limit[limit_cols[j]] + "'"):
-                            match += 1
-                    if predicate == None:
-                        print_row.append(i)
-                    if predicate == 'and' and match == len(limit_pos):  # and时要全部匹配
-                        print_row.append(i)  # 符合条件的行号
-                    if predicate == 'or' and match > 0:  # or时至少一个匹配
-                        print_row.append(i)
+    ##############################
+    # FROM
 
-            table_print = PrettyTable(sel_cols)
-            for i in range(len(print_row)):
-                add_rows = []
-                for x in col_pos:
-                    add_rows.append(rows_list[print_row[i]][x])
-                table_print.add_row(add_rows)
-            table_print.reversesort = True
-            if tag == 'view':
-                return table_print
-            elif tag == 'insert':
-                return table_print
-            elif tag == 'nesting':
-                tmpdb = using_db
-                table = tmpdb['tmp']
-                for i in range(len(sel_cols)):
-                    table.cell(row=0, column=i + 1).value = sel_cols[i]
-                for i in range(len(print_row)):
-                    add_rows = []
-                    for x in col_pos:
-                        add_rows.append(rows_list[print_row[i]][x])
-                    for j in range(len(add_rows)):
-                        table.cell(row=i + 2, column=j + 1).value = add_rows[j]
-                tmpdb.save("data/" + using_dbname + ".xlsx")
-
-            else:
-                # table_print.reversesort = True
-                print(table_print)
+    table_name_list = [table.strip() for table in table_names.split(',') if table.strip() in db.keys()]
+    if (len(table_name_list) == 0):
+        return print("表格不存在")
+    elif len(table_name_list) == 1:
+        df = db[table_name_list[0]]
     else:
-        print("该表不在数据库中.")
+        df = cartesian_product(*(db[table].add_prefix(f'{table}.') for table in db.keys()))
+
+    ##############################
+    # SELECT
+
+    if col_names != '*':
+        col_name_list = []
+        for col in col_names.split(','):
+            col = col.strip()
+            exist = col in df.columns
+            if exist:
+                col_name_list.append(col)
+            if len(table_name_list) > 1:
+                for table in table_name_list:
+                    col_name = f'{table}.{col}'
+                    if col_name in df.columns:
+                        col_name_list.append(col_name)
+                        exist = True
+            if not exist:
+                return print("列名不存在")
+            
+        df = df[col_name_list]
+
+    ##############################
+    # WHERE
+
+    if constrains:
+        constrains = re.sub(r"(\w+\.\w+)", lambda match: f"`{match.group(1)}`", constrains)
+        constrains = re.sub(r"(\S+) like (\S+)", lambda match: f'{match.group(1)}.str.match({match.group(2).replace("%", ".*").replace("_", ".")})', constrains)
+        try:
+            df = df.query(constrains)
+        except Exception as e:
+            return print(f'查询条件错误：{e}')
+
+
+    ##############################
+    # OUTPUT
+
+    tb = PrettyTable()
+    tb.field_names = df.columns
+    for index, row in df.iterrows():
+        tb.add_row(row)
+    tb.reversesort = True
+    print(tb)
+    return tb
 
 
 # grant select on test_tb for testuser
