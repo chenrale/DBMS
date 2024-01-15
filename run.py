@@ -52,6 +52,7 @@ class anaxcelhandler(QtWidgets.QMainWindow, UI_lan.Ui_MainWindow):
         self.pushButtonselall.clicked.connect(self.selectall)
         self.pushButtonload.clicked.connect(self.LoadProcess)
         self.pushButton_submit.clicked.connect(self.submit)
+        self.lineEdit_input.returnPressed.connect(self.submit)
 
         self.statusbar.showMessage('DBMS by group 2')
         self.comboBoxfiletype.addItems(['xlsx', 'xls'])
