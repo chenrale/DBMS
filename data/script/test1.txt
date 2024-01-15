@@ -1,0 +1,5 @@
+use database test_db
+select * from test where v3=2
+多表：select * from test,test1 where v3=2
+insert into test v3=2,v2=4
+select * from test
