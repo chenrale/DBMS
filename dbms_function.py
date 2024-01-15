@@ -694,6 +694,17 @@ def select(col_names: str,
         df = cartesian_product(*(db[table].add_prefix(f'{table}.') for table in db.keys()))
 
     ##############################
+    # WHERE
+
+    if constrains:
+        constrains = re.sub(r"(\w+\.\w+)", lambda match: f"`{match.group(1)}`", constrains)
+        constrains = re.sub(r"(\S+) like (\S+)", lambda match: f'{match.group(1)}.str.match({match.group(2).replace("%", ".*").replace("_", ".")})', constrains)
+        try:
+            df = df.query(constrains)
+        except Exception as e:
+            return print(f'查询条件错误：{e}')
+
+    ##############################
     # SELECT
 
     if col_names != '*':
@@ -711,21 +722,8 @@ def select(col_names: str,
                         exist = True
             if not exist:
                 return print("列名不存在")
-            
         df = df[col_name_list]
-
-    ##############################
-    # WHERE
-
-    if constrains:
-        constrains = re.sub(r"(\w+\.\w+)", lambda match: f"`{match.group(1)}`", constrains)
-        constrains = re.sub(r"(\S+) like (\S+)", lambda match: f'{match.group(1)}.str.match({match.group(2).replace("%", ".*").replace("_", ".")})', constrains)
-        try:
-            df = df.query(constrains)
-        except Exception as e:
-            return print(f'查询条件错误：{e}')
-
-
+            
     ##############################
     # OUTPUT
 
