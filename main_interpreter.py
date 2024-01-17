@@ -172,7 +172,7 @@ def Initialization():
     if os.path.exists("data/system.xlsx"):
         print("Initializating......")
     else:
-        dbms_function.creat_db('system')
+        creat_db('system')
     db = load_workbook("data/system.xlsx")
     permission_tb_col = ['database char[50] pk unique', 'select char', 'insert char', 'delete char', 'update char']
     dbms_function.creat_table('permission', db, 'system', permission_tb_col)
@@ -274,7 +274,8 @@ def query(sql, tag=''):
     # 选择操作select
     elif operate == 'select':
         try:
-            col_names, table_names, where_clause = re.match(r"select\s+(.*?)\s+from\s+([\w\s,]+?)(?:\s+where\s+(.+))?$", sql).groups()
+            col_names, table_names, where_clause = re.match(r"select\s+(.*?)\s+from\s+([\w\s,]+?)(?:\s+where\s+(.+))?$",
+                                                            sql).groups()
         except:
             return print("[!]Syntax Error.")
         dbms_function.select(col_names, table_names, where_clause, using_db)

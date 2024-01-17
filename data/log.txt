@@ -44,3 +44,8 @@
 2024-01-16 07:41:09 select * from test, testTable where test.v2 == testTable.v2
 2024-01-16 07:41:27 select test.v2 from test, testTable where test.v2 == testTable.v2 and test.v3 in (2, 3) and testTable.v1 like "侧%"
 
+2024-01-16 14:03:20 help
+2024-01-16 14:03:30 signup test test
+2024-01-16 14:04:11 admin
+2024-01-16 14:04:23 use database test_db
+2024-01-16 14:04:40 select * from test_db

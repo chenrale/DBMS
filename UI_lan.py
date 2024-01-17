@@ -15,22 +15,30 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1129, 804)
+        MainWindow.setStyleSheet("background-color: aliceblue;")
+
         self.centralwidget = QtWidgets.QWidget(MainWindow)
-        self.centralwidget.setObjectName("centralwidget")
+        self.centralwidget.setObjectName("central-widget")
+        self.centralwidget.setStyleSheet("background-color: white; color: black;")
+
         self.tabWidget = QtWidgets.QTabWidget(self.centralwidget)
         self.tabWidget.setGeometry(QtCore.QRect(10, 10, 1141, 771))
         self.tabWidget.setObjectName("tabWidget")
+        self.tabWidget.setStyleSheet("background-color: aliceblue;")
+
+        # Home Tab
         self.tab = QtWidgets.QWidget()
         self.tab.setObjectName("tab")
         self.groupBox_3 = QtWidgets.QGroupBox(self.tab)
         self.groupBox_3.setGeometry(QtCore.QRect(10, 10, 511, 721))
         self.groupBox_3.setObjectName("groupBox_3")
+
         # 设置line edit
         self.lineEdit_input = QtWidgets.QLineEdit(self)
         self.lineEdit_input.setGeometry(QtCore.QRect(10, 20, 491, 31))
         self.lineEdit_input.setObjectName("lineEdit_input")
-        # lineEdit_input移动到右下角
         self.lineEdit_input.move(555, 735)
+
         # 设置push button提交按钮
         self.pushButton_submit = QtWidgets.QPushButton(self)
         self.pushButton_submit.setGeometry(QtCore.QRect(10, 20, 71, 31))
@@ -38,40 +46,51 @@ class Ui_MainWindow(object):
         self.pushButton_submit.move(1050, 735)
         # 设置push button提交按钮文本
         self.pushButton_submit.setText("Submit")
+        self.pushButton_submit.setStyleSheet("background-color: lightblue;color:black;")
 
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.groupBox_3)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.listWidget = QtWidgets.QListWidget(self.groupBox_3)
         self.listWidget.setObjectName("listWidget")
         self.verticalLayout_2.addWidget(self.listWidget)
+
         self.groupBox_4 = QtWidgets.QGroupBox(self.tab)
         self.groupBox_4.setGeometry(QtCore.QRect(530, 360, 581, 371))
         self.groupBox_4.setObjectName("groupBox_4")
         self.textBrowserlog = QtWidgets.QTextBrowser(self.groupBox_4)
         self.textBrowserlog.setGeometry(QtCore.QRect(10, 30, 561, 291))
         self.textBrowserlog.setObjectName("textBrowserlog")
+
         self.groupBox = QtWidgets.QGroupBox(self.tab)
         self.groupBox.setGeometry(QtCore.QRect(528, 42, 581, 311))
         self.groupBox.setObjectName("groupBox")
         self.pushButtonbrowse = QtWidgets.QPushButton(self.groupBox)
-        self.pushButtonbrowse.setGeometry(QtCore.QRect(70, 60, 113, 51))
+        self.pushButtonbrowse.setGeometry(QtCore.QRect(70, 60, 100, 50))
         self.pushButtonbrowse.setObjectName("pushButtonbrowse")
+        self.pushButtonbrowse.setStyleSheet("background-color: lightblue;color:black;")
         self.pushButtonbrowseLoad = QtWidgets.QPushButton(self.groupBox)
-        self.pushButtonbrowseLoad.setGeometry(QtCore.QRect(70, 140, 113, 51))
+        self.pushButtonbrowseLoad.setGeometry(QtCore.QRect(70, 140, 100, 50))
         self.pushButtonbrowseLoad.setObjectName("pushButtonbrowseLoad")
+        self.pushButtonbrowseLoad.setStyleSheet("background-color: lightblue;color:black;")
         self.pushButtonclear = QtWidgets.QPushButton(self.groupBox)
-        self.pushButtonclear.setGeometry(QtCore.QRect(180, 60, 113, 51))
+        self.pushButtonclear.setGeometry(QtCore.QRect(180, 60, 100, 50))
         self.pushButtonclear.setObjectName("pushButtonclear")
+        self.pushButtonclear.setStyleSheet("background-color: lightblue;color:black;")
         self.pushButtonselall = QtWidgets.QPushButton(self.groupBox)
-        self.pushButtonselall.setGeometry(QtCore.QRect(290, 60, 113, 51))
+        self.pushButtonselall.setGeometry(QtCore.QRect(290, 60, 100, 50))
         self.pushButtonselall.setObjectName("pushButtonselall")
+        self.pushButtonselall.setStyleSheet("background-color: lightblue;color:black;")
         self.pushButtonload = QtWidgets.QPushButton(self.groupBox)
-        self.pushButtonload.setGeometry(QtCore.QRect(400, 60, 113, 51))
+        self.pushButtonload.setGeometry(QtCore.QRect(400, 60, 100, 50))
         self.pushButtonload.setObjectName("pushButtonload")
+        self.pushButtonload.setStyleSheet("background-color: lightblue;color:black;")
         self.comboBoxfiletype = QtWidgets.QComboBox(self.groupBox)
-        self.comboBoxfiletype.setGeometry(QtCore.QRect(80, 220, 101, 26))
+        self.comboBoxfiletype.setGeometry(QtCore.QRect(240, 140, 150, 45))
         self.comboBoxfiletype.setObjectName("comboBoxfiletype")
-        self.tabWidget.addTab(self.tab, "")
+
+        self.tabWidget.addTab(self.tab, "Home")
+
+        # Data Tab
         self.tab_2 = QtWidgets.QWidget()
         self.tab_2.setObjectName("tab_2")
         self.groupBox_2 = QtWidgets.QGroupBox(self.tab_2)
@@ -123,7 +142,8 @@ class Ui_MainWindow(object):
         self.tableWidget.setObjectName("tableWidget")
         self.tableWidget.setColumnCount(0)
         self.tableWidget.setRowCount(0)
-        self.tabWidget.addTab(self.tab_2, "")
+        self.tabWidget.addTab(self.tab_2, "Data")
+
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1129, 22))

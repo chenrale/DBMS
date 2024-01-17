@@ -1,35 +1,49 @@
-先点submit
-用户名：admin
-密码：admin
-再次点击
-## 创建数据库
-create database test
-## 删除数据库(删完再创一遍）
-drop database test
-## 使用数据库
-use database test
-## 创建表(两个都创）
-create table student (sno int,sname char[10])
-create table sc (sno int,cno int)
-## 删除表
-drop table sc
-## 添加字段
-alter student add (age int)
-## 删除字段
-alter student drop (age)
-## 修改字段
-alter student modify sname (sname char[20])
-## 记录插入
-insert into student sno=1,sname=hsc
-## 记录插入（多重）
-insert into student sno=2,sname=js&sno=3,sname=xsc
-## 记录删除
-delete on student where sno=3
-## 记录修改
-update student set sno=2,sname=lt where sno=2
-## 选择全部
-select * from student
-## 选择指定列
-select sname from student
-## 选择where条件
-select * from student where sno=1
+#测试样例
+#登陆
+admin
+Help #展示所有命令
+drop database school
+#创建数据库
+create database school
+#创建表
+create table class (classno int PK,classname char[20],term int)
+create table student (studentno int PK,studentname char[20],grade int)
+create table score (classno int ,studentno int,score int)
+#插入数据
+insert into class classno=1,classname=数据库原理,term=4&classno=2,classname=操作系统,term=5&classno=3,classname=人工智能,term=6
+insert into student studentno=1,studentname=李华,grade=1&studentno=2,studentname=小明,grade=3&studentno=3,studentname=宇驰,grade=3
+insert into score classno=1,studentno=1,score=90&classno=1,studentno=2,score=83&classno=1,studentno=3,score=67&classno=2,studentno=2,score=59&classno=2,studentno=1,score=86&classno=3,studentno=3,score=95
+#展示score
+select * from score
+#添加字段term
+alter score add (term int)
+select * from score
+#删除字段
+alter score drop (term)
+select * from score
+#展示数据
+select * from class
+#修改数据
+update class set term=3 where classno=1
+#选择指定列
+select studentname from student
+select studentno,score from score where score>'60'
+#多表查询
+select student.studentname,class.classname,score.score from class,score where class.classno==score.classno & student.studentno==score.studentno
+#创建视图
+create view class as select classno.classname,score.score from class , score where class.classno==score.classno
+#创建用户
+Signup test test
+然后直接use 发现无权限，退出切到admin
+#给予权限
+grant use on school for test
+grant select on school for test
+
+#登陆用户 test
+Use database school
+Select * from score
+可以发现此时可以正常访问，因为给了权限
+再回到admin，收回权限
+revoke use on school for test
+来到test使用use，发现此时无权限
+use database school

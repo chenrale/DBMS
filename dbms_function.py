@@ -1,7 +1,7 @@
 import hashlib
 import os
 import re
-from typing import Literal
+from typing import Literal, Optional
 import pandas as pd
 from functools import reduce
 
@@ -656,11 +656,15 @@ def update_record(table_name, current_database, current_dbname, cols, condition_
             else:
                 print("该表不在数据库中.")
 
+
 def cartesian_product(*dfs: pd.DataFrame) -> pd.DataFrame:
-    return reduce(lambda left,right: pd.merge(left,right,how='outer',on='_'), map(lambda df: df.assign(_=1), dfs)).drop('_', axis=1)
-def select(col_names: str, 
-           table_names: str, 
-           constrains: str | None,
+    return reduce(lambda left, right: pd.merge(left, right, how='outer', on='_'),
+                  map(lambda df: df.assign(_=1), dfs)).drop('_', axis=1)
+
+
+def select(col_names: str,
+           table_names: str,
+           constrains: Optional[str],
            using_db: Workbook) -> pd.DataFrame:
     '''
     Selects the `columns` from the table specified by `table_names` in the database specified by `using_dbname`.
@@ -698,7 +702,8 @@ def select(col_names: str,
 
     if constrains:
         constrains = re.sub(r"(\w+\.\w+)", lambda match: f"`{match.group(1)}`", constrains)
-        constrains = re.sub(r"(\S+) like (\S+)", lambda match: f'{match.group(1)}.str.match({match.group(2).replace("%", ".*").replace("_", ".")})', constrains)
+        constrains = re.sub(r"(\S+) like (\S+)", lambda
+            match: f'{match.group(1)}.str.match({match.group(2).replace("%", ".*").replace("_", ".")})', constrains)
         try:
             df = df.query(constrains)
         except Exception as e:
@@ -723,7 +728,7 @@ def select(col_names: str,
             if not exist:
                 return print("列名不存在")
         df = df[col_name_list]
-            
+
     ##############################
     # OUTPUT
 
