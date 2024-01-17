@@ -58,7 +58,7 @@ class anaxcelhandler(QtWidgets.QMainWindow, UI_lan.Ui_MainWindow):
         self.comboBoxfiletype.addItems(['xlsx', 'xls'])
 
         # ==========log=====
-        sys.stdout = Stream()
+        sys.stdout = Stream(newText=self.onUpdateText)
         # ==========log=====
 
         # ==========show====
