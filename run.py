@@ -58,7 +58,7 @@ class anaxcelhandler(QtWidgets.QMainWindow, UI_lan.Ui_MainWindow):
         self.comboBoxfiletype.addItems(['xlsx', 'xls'])
 
         # ==========log=====
-        sys.stdout = Stream(newText=self.onUpdateText)
+        sys.stdout = Stream()
         # ==========log=====
 
         # ==========show====
@@ -168,7 +168,6 @@ class anaxcelhandler(QtWidgets.QMainWindow, UI_lan.Ui_MainWindow):
             if files:
                 for file in files:
                     self.listWidget.addItem(os.path.basename(file).split('.')[0])
-
     def clearwidget(self):
         self.listWidget.clear()
         self.tableWidget.clear()
@@ -258,16 +257,17 @@ class anaxcelhandler(QtWidgets.QMainWindow, UI_lan.Ui_MainWindow):
         self.listWidget.selectAll()
         items = self.listWidget.selectedItems()
         if len(items) == 0:
-            QMessageBox.about(self, "hi", '请先加载文件')
+            QMessageBox.about(self, "警告", '请先加载文件')
+            QMessageBox.setStyleSheet("color:black")
 
     def LoadProcess(self):
         self.clearcontext_all()
         if self.comboBoxfiletype.currentIndex() == 1:  # xls
-            QMessageBox.about(self, "hi", '不支持 xls 格式文件')
+            QMessageBox.about(self, "警告", '不支持 xls 格式文件')
         elif self.comboBoxfiletype.currentIndex() == 0:  # xlsx
             items = self.listWidget.selectedItems()
             if len(items) == 0:
-                QMessageBox.about(self, "hi", '请先选择文件')
+                QMessageBox.about(self, "警告", '请先选择文件')
             else:
                 self.infos = {}
                 for i in list(items):

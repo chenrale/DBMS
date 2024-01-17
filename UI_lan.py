@@ -15,7 +15,7 @@ class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
         MainWindow.resize(1129, 804)
-        MainWindow.setStyleSheet("background-color: aliceblue;")
+        MainWindow.setStyleSheet("background-color: aliceblue;color:black;")
 
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("central-widget")
@@ -32,12 +32,14 @@ class Ui_MainWindow(object):
         self.groupBox_3 = QtWidgets.QGroupBox(self.tab)
         self.groupBox_3.setGeometry(QtCore.QRect(10, 10, 511, 721))
         self.groupBox_3.setObjectName("groupBox_3")
+        self.groupBox_3.setStyleSheet("color:black")
 
         # 设置line edit
         self.lineEdit_input = QtWidgets.QLineEdit(self)
         self.lineEdit_input.setGeometry(QtCore.QRect(10, 20, 491, 31))
         self.lineEdit_input.setObjectName("lineEdit_input")
         self.lineEdit_input.move(555, 735)
+        self.lineEdit_input.setStyleSheet("color:black")
 
         # 设置push button提交按钮
         self.pushButton_submit = QtWidgets.QPushButton(self)
@@ -52,6 +54,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.listWidget = QtWidgets.QListWidget(self.groupBox_3)
         self.listWidget.setObjectName("listWidget")
+        self.listWidget.setStyleSheet("color:black;")
         self.verticalLayout_2.addWidget(self.listWidget)
 
         self.groupBox_4 = QtWidgets.QGroupBox(self.tab)
@@ -59,11 +62,13 @@ class Ui_MainWindow(object):
         self.groupBox_4.setObjectName("groupBox_4")
         self.textBrowserlog = QtWidgets.QTextBrowser(self.groupBox_4)
         self.textBrowserlog.setGeometry(QtCore.QRect(10, 30, 561, 291))
+        self.textBrowserlog.setStyleSheet("color:black;")
         self.textBrowserlog.setObjectName("textBrowserlog")
 
         self.groupBox = QtWidgets.QGroupBox(self.tab)
         self.groupBox.setGeometry(QtCore.QRect(528, 42, 581, 311))
         self.groupBox.setObjectName("groupBox")
+        self.groupBox.setStyleSheet("color:black")
         self.pushButtonbrowse = QtWidgets.QPushButton(self.groupBox)
         self.pushButtonbrowse.setGeometry(QtCore.QRect(70, 60, 100, 50))
         self.pushButtonbrowse.setObjectName("pushButtonbrowse")
@@ -105,9 +110,11 @@ class Ui_MainWindow(object):
         self.comboBox_wb = QtWidgets.QComboBox(self.groupBox_2)
         self.comboBox_wb.setGeometry(QtCore.QRect(110, 30, 481, 26))
         self.comboBox_wb.setObjectName("comboBox_wb")
+        self.comboBox_wb.setStyleSheet("color:black")
         self.comboBox_ws = QtWidgets.QComboBox(self.groupBox_2)
         self.comboBox_ws.setGeometry(QtCore.QRect(110, 80, 481, 26))
         self.comboBox_ws.setObjectName("comboBox_ws")
+        self.comboBox_ws.setStyleSheet("color:black")
         self.label_keyidx = QtWidgets.QLabel(self.groupBox_2)
         self.label_keyidx.setGeometry(QtCore.QRect(610, 30, 91, 31))
         self.label_keyidx.setObjectName("label_keyidx")
